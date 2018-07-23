@@ -1,7 +1,7 @@
 {
-  "name": "ADT Pulse MQTT",
-  "version": "0.1.4.5",
-  "slug": "adt-pulse-mqtt",
+  "name": "ADT Pulse MQTT 2",
+  "version": "0.0.0.1",
+  "slug": "adt-pulse-mqtt-2",
   "description": "ADT Pulse Bridge using MQTT",
   "url":"https://github.com/e1miran/adt-pulse-mqtt",
   "startup": "application",
@@ -32,7 +32,7 @@
       "alarm_command_topic": "home/alarm/cmd",
       "zone_state_topic": "adt/zone",
       "smartthings_topic": "smartthings",
-      "smartthings": false
+      "smartthing": false
     },
     "schema": {
       "ssl": "bool",
@@ -51,6 +51,6 @@
       "alarm_command_topic": "str",
       "zone_state_topic": "str",
       "smartthings_topic": "str",
-      "smartthings": "bool"
+      "smartthing": "bool"
     }
 }
