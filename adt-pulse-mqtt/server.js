@@ -2,14 +2,13 @@ const Pulse = require('./adt-pulse.js');
 const mqtt = require('mqtt');
 var config = require('/data/options.json');
 
-var myAlarm = new Pulse(config.pulse_login.username, config.pulse_login.password);
-
-var client = new mqtt.connect("mqtt://"+config.mqtt_host,config.mqtt_connect_options);
-var alarm_state_topic = config.alarm_state_topic;
-var alarm_command_topic = config.alarm_command_topic;
-var zone_state_topic = config.zone_state_topic;
-var smartthings_topic = config.smartthings_topic;
-var smartthings = config.smartthings;
+var myAlarm = new Pulse(config.options.pulse_login.username, config.options.pulse_login.password);
+var client = new mqtt.connect("mqtt://"+config.options.mqtt_host,config.options.mqtt_connect_options);
+var alarm_state_topic = config.options.alarm_state_topic;
+var alarm_command_topic = config.options.alarm_command_topic;
+var zone_state_topic = config.options.zone_state_topic;
+var smartthings_topic = config.options.smartthings_topic;
+var smartthings = config.options.smartthing;
 
 var alarm_last_state = "unknown";
 var devices = {};
@@ -40,7 +39,7 @@ client.on('message', function (topic, message) {
      action= {'newstate':'disarm','prev_state':prev_state};
   }
   else if (msg =="arm_away") {
-    action = {'newstate':'away','prev_state':prev_state};
+    action= {'newstate':'away','prev_state':prev_state};
   }
   myAlarm.setAlarmState(action);
 });
@@ -86,7 +85,7 @@ myAlarm.onStatusUpdate(
 
       if (!mqtt_state.includes(alarm_last_state) && !mqtt_state.includes('unknown')) {
          console.log((new Date()).toLocaleString()+": Pushing alarm state: "+mqtt_state+" to "+alarm_state_topic);
-         client.publish(alarm_state_topic, mqtt_state,{"retain":"true"});
+         client.publish(alarm_state_topic, mqtt_state,{"retain":true});
          if (smartthings){
            var sm_alarm_topic = smartthings_topic+"/ADT Alarm System/alarm/cmd";
            console.log((new Date()).toLocaleString()+": Pushing alarm state to smartthings"+sm_alarm_topic);
@@ -122,7 +121,7 @@ myAlarm.onZoneUpdate(
     }
 
     if (devices[device.id]==null || device.activityTs!=devices[device.id].activityTs){
-        client.publish(dev_zone_state_topic, devValue, {"retain":"false"});
+        client.publish(dev_zone_state_topic, devValue, {"retain":false});
         console.log((new Date()).toLocaleString()+": Pushing  "+dev_zone_state_topic+" to "+devValue);
 
         if (smartthings){
